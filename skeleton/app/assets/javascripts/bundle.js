@@ -152,13 +152,11 @@ class FollowToggle {
   handleClick(e) {
     e.preventDefault();
     if (['following', 'unfollowing'].includes(this.followState)) return;
-    // this.followState ? APIUtil.unfollowUser(this.userId) : APIUtil.followUser(this.userId);
     let command = this.followState ? APIUtil.unfollowUser : APIUtil.followUser;
-
     !this.followState ? this.followState = 'following' : this.followState = 'unfollowing'; 
+
     this.render();
     command(this.userId)
-      // .then(() => { this.followState = !this.followState; })
       .then(() => {
         if (this.followState === 'following') { 
           this.followState = true;
@@ -167,13 +165,13 @@ class FollowToggle {
         }
       })
       .then(this.render.bind(this))
-      // .catch( () => {      
-      //   if (this.followState === 'following') {
-      //     this.followState = false;
-      //   } else {
-      //     this.followState = true;
-      //   }
-      // });
+      .fail( () => {      
+        if (this.followState === 'following') {
+          this.followState = false;
+        } else {
+          this.followState = true;
+        }
+      });
 
   }
 }
